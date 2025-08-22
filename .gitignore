@@ -1,0 +1,29 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# VS Code settings
+.vscode/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Test / coverage
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Logs
+*.log
