@@ -1,4 +1,5 @@
 from code.Background import Background
+from code.Const import WIN_WIDTH
 
 
 class EntityFactory:
@@ -9,5 +10,6 @@ class EntityFactory:
             case 'menu_inicial':
                 list_menu_inicial = []
                 for i in range(5):
-                    list_menu_inicial.append(Background(f'menu_inicial{i}', (0,0)))
+                    list_menu_inicial.append(Background(f'menu_inicial{i}', position))
+                    list_menu_inicial.append(Background(f'menu_inicial{i}', (WIN_WIDTH, 0)))
                 return list_menu_inicial

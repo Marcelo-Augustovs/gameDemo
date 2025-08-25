@@ -18,5 +18,4 @@ class Level:
                 self.window.blit(source=ent.surf, dest=ent.rect)
                 ent.move()
             pygame.display.flip()
-        pass
     
