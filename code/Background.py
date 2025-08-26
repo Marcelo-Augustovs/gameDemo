@@ -8,7 +8,9 @@ class Background(Entity):
         super().__init__(name, position)
         
     def move(self):
-        self.rect.centerx -= ENTITY_SPEED[self.name]
+        speed = ENTITY_SPEED.get(self.name, 0)
+        
+        self.rect.centerx -= speed
         if self.rect.right <= 0:
             self.rect.left = WIN_WIDTH
         
