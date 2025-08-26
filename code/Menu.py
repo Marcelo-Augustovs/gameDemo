@@ -1,6 +1,7 @@
 import pygame.image
 from pygame import Rect, Surface
 from pygame.font import Font
+from code.Level import Level
 
 from code.Const import COLOR_ORANGE, COLOR_WHITE, COLOR_YELLOW, MENU_OPTION, WIN_WIDTH 
 
@@ -8,21 +9,24 @@ class Menu:
     
     def __init__(self,window):
         self.window = window
-        self.surface = pygame.image.load('./assets/menu-inicial/imagens/orig800x620.png')
-        self.rect = self.surface.get_rect(left=0,top=0)
+        self.background = Level(self.window, 'menu_inicial', self)
         
         
     def run(self):
         menu_option = 0
-        
+        clock = pygame.time.Clock()
+    
         #music
-        pygame.mixer_music.load('./assets/menu-inicial/music/160bpm-retro-game-square-wave-song-mysterious-exploration.wav')
+        pygame.mixer_music.load('./assets/music/menu-inicial-160bpm-retro-game-square-wave-song-mysterious-exploration.wav')
         pygame.mixer_music.play(-1)
         
         #Menu
         while True:
-            self.window.blit(source=self.surface,dest=self.rect)
+            clock.tick(60)
+            self.background.update()
+            self.background.draw() 
             
+                       
             self.menu_text(80,"Simple Adventure",COLOR_ORANGE,((WIN_WIDTH / 2), 120)) 
             
             for i in range(len(MENU_OPTION)):
