@@ -39,16 +39,18 @@ class Menu:
         
         # events
             for event in pygame.event.get():
+              pressed_key = pygame.key.get_pressed()
+             
               if event.type == pygame.QUIT: 
                 pygame.quit()
                 quit()
               if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_s or pressed_key[pygame.K_DOWN]:
                   if menu_option < len(MENU_OPTION) -1:
                     menu_option += 1  
                   else:
                     menu_option = 0
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_w or pressed_key[pygame.K_UP]:
                   if menu_option > 0:
                     menu_option -= 1
                   else:
