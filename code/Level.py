@@ -2,7 +2,7 @@ import sys
 import pygame
 from pygame.font import Font
 from pygame import Rect, Surface
-from code.Const import COLOR_WHITE, COLOR_YELLOW, WIN_HEIGHT
+from code.Const import COLOR_YELLOW, WIN_HEIGHT
 from code.EntityFactory import EntityFactory
 from code.Entity import Entity
 
@@ -15,6 +15,8 @@ class Level:
         self.game_mode = game_mode
         self.entity_list: list[Entity] = [] 
         self.entity_list.extend(EntityFactory.get_entity(self.name))
+        if self.name is not 'menu_inicial':
+            self.entity_list.append(EntityFactory.get_entity('Player'))
         self.timeout = 20000 # 20 segundos
         
     def update(self):
@@ -23,7 +25,7 @@ class Level:
 
     def draw(self):
         for ent in self.entity_list:
-            self.window.blit(ent.surf, ent.rect)
+            self.window.blit(ent.get_frame(), ent.rect)
 
     def run(self):
         pygame.mixer_music.load(f'./assets/music/{self.name}.wav')
@@ -48,9 +50,7 @@ class Level:
     def level_text(self,text_size: int, text:str, text_color: tuple, text_pos: tuple):
         
         text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter",size=text_size)
-        
         text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
-        
         text_rect: Rect = text_surf.get_rect(left=text_pos[0],top=text_pos[1])
         
         self.window.blit(source=text_surf, dest=text_rect)   
