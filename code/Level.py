@@ -1,8 +1,9 @@
+import random
 import sys
 import pygame
 from pygame.font import Font
 from pygame import Rect, Surface
-from code.Const import COLOR_YELLOW, WIN_HEIGHT
+from code.Const import COLOR_YELLOW, EVENT_ENEMY, WIN_HEIGHT
 from code.EntityFactory import EntityFactory
 from code.Entity import Entity
 
@@ -18,6 +19,7 @@ class Level:
         if self.name is not 'menu_inicial':
             self.entity_list.append(EntityFactory.get_entity('Player'))
         self.timeout = 20000 # 20 segundos
+        pygame.time.set_timer(EVENT_ENEMY, 2000)
         
     def update(self):
         for ent in self.entity_list:
@@ -36,10 +38,14 @@ class Level:
             clock.tick(60)
             self.update()
             self.draw()
+            
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == EVENT_ENEMY:
+                    choice = random.choice(('Enemy1','Enemy2'))
+                    self.entity_list.append(EntityFactory.get_entity(choice))
                     
             self.level_text(18,f'{self.name} - Timeout: {self.timeout / 1000 :.1f}s', COLOR_YELLOW,(10,5))
             self.level_text(18,f'fps: {clock.get_fps() :.0f}', COLOR_YELLOW,(10, WIN_HEIGHT - 35))
