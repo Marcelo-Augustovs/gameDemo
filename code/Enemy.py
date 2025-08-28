@@ -177,6 +177,7 @@ class Enemy(Entity):
                 if self.state == "attack" and self.current_frame >= frames_per_row:
                     self.state = "idle"
                     self.current_frame = 0
+                    self.hit_enemy = False
 
             if self.current_frame >= frames_per_row:
                 self.current_frame = 0

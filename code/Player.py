@@ -10,7 +10,7 @@ class Player(Entity):
         self.surf_idle = self.surf  # idle (parado)
         self.surf_walk = pygame.image.load("assets/images/player_walk.png").convert_alpha()
         self.surf_walk_atk = pygame.image.load("assets/images/player_walk_attack.png").convert_alpha()
-        
+        self.surf_hurt = pygame.image.load("assets/images/player_hurt.png").convert_alpha()
 
         # Config idle
         self.directions = 4
@@ -28,6 +28,11 @@ class Player(Entity):
         self.frames_per_row_walk_atk = 6
         self.frame_width_walk_atk = self.surf_walk_atk.get_width() // self.frames_per_row_walk_atk
         self.frame_height_walk_atk = self.surf_walk_atk.get_height() // self.directions
+        
+        #config hurt
+        self.frames_per_row_hurt = 5
+        self.frame_width_hurt = self.surf_hurt.get_width() // self.frames_per_row_hurt
+        self.frame_height_hurt = self.surf_hurt.get_height() // self.directions
 
         # Estado inicial
         self.state = "idle"  # idle, walk, attack
@@ -38,6 +43,8 @@ class Player(Entity):
         self.idle_counter = 0
         self.idle_speed = 10
         self.hit_enemy = False
+        self.hurt_duration = self.frames_per_row_hurt  # dura a animação completa
+        self.hurt_counter = 0
 
         # Controle de animação
         self.animation_counter = 0
@@ -78,10 +85,11 @@ class Player(Entity):
         self.row = self.current_direction
 
         # ---- Atualiza estado ----
-        if self.moving:
-            self.state = "walk"
-        else:
-            self.state = "idle"
+        if self.state not in ["hurt", "attack"]:
+            if self.moving:
+                self.state = "walk"
+            else:
+                self.state = "idle"
 
 
     def attack(self):
@@ -91,18 +99,49 @@ class Player(Entity):
                 self.state = "attack"
                 self.current_frame = 0
                 self.animation_counter = 0
+    
+    def take_damage(self, damage):
+        """Aplica dano e inicia animação de 'hurt'"""
+        self.health -= damage
+        if self.health < 0:
+            self.health = 0
+        self.state = "hurt"
+        self.current_frame = 0
+        self.animation_counter = 0
+        self.hurt_counter = 0    
 
     def get_frame(self):
-        if self.state == "walk":
+        if self.state == "hurt":
+            frame_width = self.frame_width_hurt
+            frame_height = self.frame_height_hurt
+            surf = self.surf_hurt
+            max_frames  = self.frames_per_row_hurt
+            speed = self.animation_speed 
+            
+            self.animation_counter += 1
+            if self.animation_counter >= speed:
+                self.current_frame += 1
+                self.animation_counter = 0
+                self.hurt_counter += 1
+
+            # Se terminou a animação de hurt → volta para idle
+            if self.hurt_counter >= max_frames:
+                self.state = "idle"
+                self.current_frame = 0
+                self.hurt_counter = 0
+            
+        elif self.state == "walk":
             frame_width = self.frame_width_walk
             frame_height = self.frame_height_walk
             surf = self.surf_walk
             max_frames = self.frames_per_row_walk
+            
         elif self.state == "attack":
             frame_width = self.frame_width_walk_atk
             frame_height = self.frame_height_walk_atk
             surf = self.surf_walk_atk
             max_frames = self.frames_per_row_walk_atk
+            
         else:  # idle
             frame_width = self.frame_width_idle
             frame_height = self.frame_height_idle
@@ -111,6 +150,9 @@ class Player(Entity):
                 max_frames = self.frames_idle_up
             else:
                 max_frames = self.frames_per_row_idle
+        
+        
+        
 
         # Atualização de frames
         self.animation_counter += 1

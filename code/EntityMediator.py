@@ -40,34 +40,34 @@ class EntityMediator:
                             break  # remove o break se quiser atingir múltiplos inimigos por ataque
               
             #Enemy            
-            """if isinstance(ent, Enemy) and ent.state == "attack":
+            if isinstance(ent, Enemy) and ent.state == "attack":
                 if getattr(ent, "hit_player", False):  # se já acertou, ignora
                     continue
                 
                 attack_rect = ent.rect.copy()
 
                 # Ajusta área do ataque dependendo da direção
-                if ent.current_direction == 3:  # direita
+                if ent.row == 3:  # direita
                     attack_rect.left += ent.rect.width
                     attack_rect.width = 1
-                elif ent.current_direction == 2:  # esquerda
+                elif ent.row == 2:  # esquerda
                     attack_rect.left -= 1
                     attack_rect.width = 1
-                elif ent.current_direction == 0:  # baixo
+                elif ent.row == 0:  # baixo
                     attack_rect.top += ent.rect.height
                     attack_rect.height = 1
-                elif ent.current_direction == 1:  # cima
+                elif ent.row == 1:  # cima
                     attack_rect.top -= 1
                     attack_rect.height = 1
 
                 for target in entity_list:
-                    if isinstance(target, Enemy) and target.health > 0:
+                    if isinstance(target, Player) and target.health > 0:
                         if attack_rect.colliderect(target.rect):
                             target.take_damage(ENTITY_DAMAGE.get(ent.name, 0))
 
                             # marca que o ataque já acertou
                             ent.hit_player = True
-                            break  # remove o break se quiser atingir múltiplos inimigos por ataque"""
+                            break  # remove o break se quiser atingir múltiplos inimigos por ataque
 
     @staticmethod
     def verify_health(entity_list: list[Entity]):
