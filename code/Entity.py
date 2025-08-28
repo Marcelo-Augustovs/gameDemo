@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import pygame
 
-from code.Const import ENTITY_HEALTH
+from code.Const import ENTITY_DAMAGE, ENTITY_HEALTH
 
 
 class Entity(ABC):
@@ -12,6 +12,7 @@ class Entity(ABC):
         self.rect = self.surf.get_rect(left=position[0], top=position[1])
         self.speed = 0
         self.health = ENTITY_HEALTH.get(self.name, 1)
+        self.damage = ENTITY_DAMAGE.get(self.name, 0)
         
         # Controle de animação
         self.frame_size = frame_size      

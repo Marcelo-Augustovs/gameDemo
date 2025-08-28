@@ -19,9 +19,16 @@ ENTITY_SPEED = {
     'Enemy2': 1
 }
 ENTITY_HEALTH = {
-    'Player': 250,
-    'Enemy1': 150,
-    'Enemy2': 200
+    'Player': 50,
+    'Enemy1': 15,
+    'Enemy2': 20,
+    'Enemy3': 10
+}
+ENTITY_DAMAGE = {
+    'Player': 5,
+    'Enemy1': 10,
+    'Enemy2': 15,
+    'Enemy3': 5
 }
 # M 
 MENU_OPTION = ('NEW GAME',
