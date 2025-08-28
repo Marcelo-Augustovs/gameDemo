@@ -10,6 +10,7 @@ class Player(Entity):
         self.surf_idle = self.surf  # idle (parado)
         self.surf_walk = pygame.image.load("assets/images/player_walk.png").convert_alpha()
         self.surf_walk_atk = pygame.image.load("assets/images/player_walk_attack.png").convert_alpha()
+        
 
         # Config idle
         self.directions = 4
@@ -36,6 +37,7 @@ class Player(Entity):
         self.moving = False
         self.idle_counter = 0
         self.idle_speed = 10
+        self.hit_enemy = False
 
         # Controle de animação
         self.animation_counter = 0
@@ -120,6 +122,7 @@ class Player(Entity):
             if self.state == "attack" and self.current_frame >= max_frames:
                 self.state = "idle"
                 self.current_frame = 0
+                self.hit_enemy = False
 
         # Proteção
         if self.current_frame >= max_frames:

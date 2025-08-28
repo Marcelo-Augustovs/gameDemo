@@ -30,6 +30,9 @@ class Level:
             
         if isinstance(ent, (Player)):
             ent.attack()
+            
+        EntityMediator.verify_collision(self.entity_list)
+        EntityMediator.verify_health(self.entity_list)
 
     def draw(self):
         for ent in self.entity_list:
