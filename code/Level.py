@@ -6,6 +6,9 @@ from pygame import Rect, Surface
 from code.Const import COLOR_YELLOW, EVENT_ENEMY, WIN_HEIGHT
 from code.EntityFactory import EntityFactory
 from code.Entity import Entity
+from code.EntityMediator import EntityMediator
+from code.Player import Player
+
 
 
 class Level:
@@ -24,6 +27,9 @@ class Level:
     def update(self):
         for ent in self.entity_list:
             ent.move()
+            
+        if isinstance(ent, (Player)):
+            ent.attack()
 
     def draw(self):
         for ent in self.entity_list:
@@ -44,13 +50,21 @@ class Level:
                     pygame.quit()
                     sys.exit()
                 if event.type == EVENT_ENEMY:
-                    choice = random.choice(('Enemy1','Enemy2'))
+                    choice = random.choice(('Enemy1','Enemy2','Enemy3'))
                     self.entity_list.append(EntityFactory.get_entity(choice))
-                    
+                if event.type == pygame.KEYDOWN:
+                    if (event.key == pygame.K_j) or (event.key == pygame.K_z): 
+                        for ent in self.entity_list:
+                            if isinstance(ent, Player):  
+                                ent.attack()    
+                                
             self.level_text(18,f'{self.name} - Timeout: {self.timeout / 1000 :.1f}s', COLOR_YELLOW,(10,5))
             self.level_text(18,f'fps: {clock.get_fps() :.0f}', COLOR_YELLOW,(10, WIN_HEIGHT - 35))
             self.level_text(18,f'entidades: {len(self.entity_list)}', COLOR_YELLOW, (10, WIN_HEIGHT - 20))
             pygame.display.flip()
+            
+            EntityMediator.verify_collision(entity_list=self.entity_list)
+            EntityMediator.verify_health(entity_list=self.entity_list)
         pass
     
     def level_text(self,text_size: int, text:str, text_color: tuple, text_pos: tuple):

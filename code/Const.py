@@ -18,6 +18,11 @@ ENTITY_SPEED = {
     'Enemy1': 1,
     'Enemy2': 1
 }
+ENTITY_HEALTH = {
+    'Player': 250,
+    'Enemy1': 150,
+    'Enemy2': 200
+}
 # M 
 MENU_OPTION = ('NEW GAME',
                'CONTINUE',
