@@ -22,14 +22,14 @@ class Level:
         if self.name is not 'menu_inicial':
             self.entity_list.append(EntityFactory.get_entity('Player'))
         self.timeout = 20000 # 20 segundos
-        pygame.time.set_timer(EVENT_ENEMY, 2000)
+        pygame.time.set_timer(EVENT_ENEMY, 6000)
         
     def update(self):
         for ent in self.entity_list:
             ent.move()
             
-        if isinstance(ent, (Player)):
-            ent.attack()
+            if isinstance(ent, (Player)):
+                ent.attack()
             
         EntityMediator.verify_collision(self.entity_list)
         EntityMediator.verify_health(self.entity_list)
@@ -65,9 +65,6 @@ class Level:
             self.level_text(18,f'fps: {clock.get_fps() :.0f}', COLOR_YELLOW,(10, WIN_HEIGHT - 35))
             self.level_text(18,f'entidades: {len(self.entity_list)}', COLOR_YELLOW, (10, WIN_HEIGHT - 20))
             pygame.display.flip()
-            
-            EntityMediator.verify_collision(entity_list=self.entity_list)
-            EntityMediator.verify_health(entity_list=self.entity_list)
         pass
     
     def level_text(self,text_size: int, text:str, text_color: tuple, text_pos: tuple):

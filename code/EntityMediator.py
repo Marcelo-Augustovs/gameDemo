@@ -37,9 +37,9 @@ class EntityMediator:
 
                             # marca que o ataque já acertou
                             ent.hit_enemy = True
-                            break  # remove o break se quiser atingir múltiplos inimigos por ataque
+                           
               
-            #Enemy            
+              #Enemy            
             if isinstance(ent, Enemy) and ent.state == "attack":
                 if getattr(ent, "hit_player", False):  # se já acertou, ignora
                     continue
@@ -75,5 +75,6 @@ class EntityMediator:
         Remove entidades com vida <= 0 da lista.
         """
         for ent in entity_list[:]:  # itera sobre cópia para não quebrar a lista
+            continue
             if isinstance(ent, (Player, Enemy)) and ent.health <= 0:
                 entity_list.remove(ent)
