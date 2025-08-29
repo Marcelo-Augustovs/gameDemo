@@ -21,7 +21,7 @@ ENTITY_SPEED = {
 ENTITY_HEALTH = {
     'Player': 50,
     'Enemy1': 15,
-    'Enemy2': 2,
+    'Enemy2': 20,
     'Enemy3': 10
 }
 ENTITY_DAMAGE = {

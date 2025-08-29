@@ -1,3 +1,4 @@
+import pygame
 from code.Const import ENTITY_DAMAGE
 from code.Enemy import Enemy
 from code.Entity import Entity
@@ -69,12 +70,13 @@ class EntityMediator:
                             ent.hit_player = True
                             break  # remove o break se quiser atingir múltiplos inimigos por ataque
 
+
     @staticmethod
     def verify_health(entity_list: list[Entity]):
-        """
-        Remove entidades com vida <= 0 da lista.
-        """
-        for ent in entity_list[:]:  # itera sobre cópia para não quebrar a lista
-            continue
-            if isinstance(ent, (Player, Enemy)) and ent.health <= 0:
-                entity_list.remove(ent)
+        now = pygame.time.get_ticks()
+        for ent in entity_list[:]:
+            if isinstance(ent, (Player, Enemy)) and ent.state == "death":
+                if ent.death_time and now - ent.death_time >= 7000:  # 7.0 segundos
+                    entity_list.remove(ent)
+
+

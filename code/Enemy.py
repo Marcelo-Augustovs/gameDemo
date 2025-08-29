@@ -129,6 +129,7 @@ class Enemy(Entity):
         if self.health <= 0:
             self.health = 0
             self.state = "death"
+            self.death_time = pygame.time.get_ticks()
         else:    
             self.state = "hurt"
             self.current_frame = 0
