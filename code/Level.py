@@ -4,7 +4,7 @@ import pygame
 from pygame.font import Font
 from pygame import Rect, Surface
 from code.Hud import Hud
-from code.Const import COLOR_YELLOW, EVENT_ENEMY, WIN_HEIGHT
+from code.Const import COLOR_WHITE, COLOR_YELLOW, EVENT_ENEMY, WIN_HEIGHT, COLOR_BLUE, WIN_WIDTH
 from code.EntityFactory import EntityFactory
 from code.Entity import Entity
 from code.EntityMediator import EntityMediator
@@ -20,7 +20,7 @@ class Level:
         self.game_mode = game_mode
         self.entity_list: list[Entity] = [] 
         self.entity_list.extend(EntityFactory.get_entity(self.name))
-        
+        self.score = 0
         
         self.hud = None
         if self.name != 'menu_inicial':
@@ -32,7 +32,8 @@ class Level:
              
             self.hud = Hud(self.entity_list)
             
-        self.timeout = 20000 # 20 segundos
+            
+        self.timeout = 60000 * 3 # 1 min
         pygame.time.set_timer(EVENT_ENEMY, 3000)
         
     def update(self):
@@ -44,6 +45,9 @@ class Level:
             
         EntityMediator.verify_collision(self.entity_list)
         EntityMediator.verify_health(self.entity_list)
+        
+        self.score_gain = EntityMediator.verify_health(self.entity_list)
+        self.score += self.score_gain
         
         self.player_dead = any(isinstance(ent, Player) and ent.state == "death" for ent in self.entity_list)
 
@@ -81,16 +85,23 @@ class Level:
                             if isinstance(ent, Player):  
                                 ent.attack()    
                                 
-            self.level_text(18,f'{self.name} - Timeout: {self.timeout / 1000 :.1f}s', COLOR_YELLOW,(10,5))
+            self.level_text(18,f'{self.name[:6]} - Timeout: {self.timeout / 1000 :.1f}s', COLOR_WHITE,(10,5))
             self.level_text(18,f'fps: {clock.get_fps() :.0f}', COLOR_YELLOW,(10, WIN_HEIGHT - 35))
             self.level_text(18,f'entidades: {len(self.entity_list)}', COLOR_YELLOW, (10, WIN_HEIGHT - 20))
+            self.level_text(18,f'Score: {self.score}', COLOR_BLUE,(WIN_WIDTH - 110,5))
             pygame.display.flip()
         pass
     
     def level_text(self,text_size: int, text:str, text_color: tuple, text_pos: tuple):
         
-        text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter",size=text_size)
+        text_font: Font = pygame.font.SysFont("Lucida Sans Typewriter", text_size)
+
+        # sombra preta
+        shadow_surf = text_font.render(text, True, (0, 0, 0)).convert_alpha()
+        shadow_rect: Rect = shadow_surf.get_rect(left=text_pos[0], top=text_pos[1])
+        self.window.blit(shadow_surf, shadow_rect)
+
+        # texto principal
         text_surf: Surface = text_font.render(text, True, text_color).convert_alpha()
-        text_rect: Rect = text_surf.get_rect(left=text_pos[0],top=text_pos[1])
-        
-        self.window.blit(source=text_surf, dest=text_rect)   
+        text_rect: Rect = text_surf.get_rect(left=text_pos[0], top=text_pos[1])
+        self.window.blit(text_surf, text_rect)  
