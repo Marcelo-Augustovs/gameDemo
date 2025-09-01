@@ -7,7 +7,7 @@ class Player(Entity):
         super().__init__(name, position)
 
         # ---- Spritesheets ----
-        self.surf_idle = self.surf  # idle (parado)
+        self.surf_idle = self.surf  
         self.surf_walk = pygame.image.load("assets/images/player_walk.png").convert_alpha()
         self.surf_walk_atk = pygame.image.load("assets/images/player_walk_attack.png").convert_alpha()
         self.surf_hurt = pygame.image.load("assets/images/player_hurt.png").convert_alpha()
@@ -47,7 +47,7 @@ class Player(Entity):
         self.frame_height_death = self.surf_death.get_height() // self.directions
 
         # Estado inicial
-        self.state = "idle"  # idle, walk, attack
+        self.state = "idle"  
         self.current_direction = 0
         self.current_frame = 0
         self.row = self.current_direction
@@ -55,7 +55,7 @@ class Player(Entity):
         self.idle_counter = 0
         self.idle_speed = 10
         self.hit_enemy = False
-        self.hurt_duration = self.frames_per_row_hurt  # dura a animação completa
+        self.hurt_duration = self.frames_per_row_hurt  
         self.hurt_counter = 0
 
         # Controle de animação
@@ -69,7 +69,7 @@ class Player(Entity):
         pressed_key = pygame.key.get_pressed()
         self.moving = False
 
-        # Se está atacando, ignora movimento
+        
         if self.state == "attack":
             return  
 
@@ -99,7 +99,7 @@ class Player(Entity):
 
         self.row = self.current_direction
 
-        # ---- Atualiza estado ----
+       
         if self.state not in ["hurt", "attack"]:
             if self.moving:
                 self.state = "walk"
@@ -112,21 +112,21 @@ class Player(Entity):
             return
         
         pressed_key = pygame.key.get_pressed()
-        if self.state != "attack":  # só começa se não estiver atacando
+        if self.state != "attack":  
             if pressed_key[pygame.K_j] or pressed_key[pygame.K_z]:
                 self.state = "attack"
                 self.current_frame = 0
                 self.animation_counter = 0
     
     def take_damage(self, damage):
-        """Aplica dano e inicia animação de 'hurt' ou 'death'"""
+        
         self.health -= damage
         if self.health <= 0:
             self.health = 0
             self.state = "death"
             self.current_frame = 0
             self.animation_counter = 0
-            self.death_time = pygame.time.get_ticks()  # marca tempo da morte
+            self.death_time = pygame.time.get_ticks()  
         else:
             self.state = "hurt"
             self.current_frame = 0
@@ -143,13 +143,13 @@ class Player(Entity):
             max_frames = self.frames_per_row_death   
             speed = self.animation_speed
 
-            if self.current_frame < max_frames - 1:  # avança até o último frame
+            if self.current_frame < max_frames - 1:  
                 self.animation_counter += 1
                 if self.animation_counter >= speed:
                     self.current_frame += 1
                     self.animation_counter = 0
             else:
-                self.current_frame = max_frames - 1  # trava no último
+                self.current_frame = max_frames - 1  
 
             
             return surf.subsurface(
@@ -173,7 +173,7 @@ class Player(Entity):
                 self.animation_counter = 0
                 self.hurt_counter += 1
 
-            # Se terminou a animação de hurt → volta para idle
+            
             if self.hurt_counter >= max_frames:
                 self.state = "idle"
                 self.current_frame = 0
@@ -209,13 +209,13 @@ class Player(Entity):
             self.current_frame += 1
             self.animation_counter = 0
 
-            # Se ataque terminou → volta para idle
+            
             if self.state == "attack" and self.current_frame >= max_frames:
                 self.state = "idle"
                 self.current_frame = 0
                 self.hit_enemy = False
 
-        # Proteção
+        
         if self.current_frame >= max_frames:
             self.current_frame = 0
 

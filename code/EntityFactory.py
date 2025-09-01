@@ -22,6 +22,12 @@ class EntityFactory:
                     list_level1.append(Background(f'Level1Bg{i}', position))
                     list_level1.append(Background(f'Level1Bg{i}', position))
                 return list_level1
+            case 'Level2Bg':
+                list_level2 = []
+                for i in range(9):
+                    list_level2.append(Background(f'level2Bg{i}',position))
+                    list_level2.append(Background(f'level2Bg{i}',position))
+                return list_level2    
             case 'Player':
                 return Player('Player',(10, 200))
             case 'Enemy1':

@@ -3,6 +3,7 @@ import sys
 import pygame
 from pygame.font import Font
 from pygame import Rect, Surface
+from code.Hud import Hud
 from code.Const import COLOR_YELLOW, EVENT_ENEMY, WIN_HEIGHT
 from code.EntityFactory import EntityFactory
 from code.Entity import Entity
@@ -19,10 +20,20 @@ class Level:
         self.game_mode = game_mode
         self.entity_list: list[Entity] = [] 
         self.entity_list.extend(EntityFactory.get_entity(self.name))
-        if self.name is not 'menu_inicial':
+        
+        
+        self.hud = None
+        if self.name != 'menu_inicial':
             self.entity_list.append(EntityFactory.get_entity('Player'))
+            
+            self.lose_image = pygame.image.load("./assets/hud/lose.png").convert_alpha()
+            self.player_dead = False 
+            self.win_image = pygame.image.load("./assets/hud/win.png").convert_alpha()
+             
+            self.hud = Hud(self.entity_list)
+            
         self.timeout = 20000 # 20 segundos
-        pygame.time.set_timer(EVENT_ENEMY, 6000)
+        pygame.time.set_timer(EVENT_ENEMY, 3000)
         
     def update(self):
         for ent in self.entity_list:
@@ -33,10 +44,19 @@ class Level:
             
         EntityMediator.verify_collision(self.entity_list)
         EntityMediator.verify_health(self.entity_list)
+        
+        self.player_dead = any(isinstance(ent, Player) and ent.state == "death" for ent in self.entity_list)
 
     def draw(self):
         for ent in self.entity_list:
             self.window.blit(ent.get_frame(), ent.rect)
+            
+        if self.hud:
+            self.hud.draw(self.window)
+            
+        if self.player_dead:
+            rect = self.lose_image.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
+            self.window.blit(self.lose_image, rect)    
 
     def run(self):
         pygame.mixer_music.load(f'./assets/music/{self.name}.wav')
