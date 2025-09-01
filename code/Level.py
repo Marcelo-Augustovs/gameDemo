@@ -4,7 +4,7 @@ import pygame
 from pygame.font import Font
 from pygame import Rect, Surface
 from code.Hud import Hud
-from code.Const import COLOR_WHITE, COLOR_YELLOW, EVENT_ENEMY, WIN_HEIGHT, COLOR_BLUE, WIN_WIDTH
+from code.Const import COLOR_WHITE, COLOR_YELLOW, EVENT_ENEMY, EVENT_TIMEOUT, SPAWN_TIME, TIMEOUT_LEVEL, TIMEOUT_STEP, WIN_HEIGHT, COLOR_BLUE, WIN_WIDTH
 from code.EntityFactory import EntityFactory
 from code.Entity import Entity
 from code.EntityMediator import EntityMediator
@@ -33,8 +33,9 @@ class Level:
             self.hud = Hud(self.entity_list)
             
             
-        self.timeout = 60000 * 3 # 1 min
-        pygame.time.set_timer(EVENT_ENEMY, 3000)
+        self.timeout = TIMEOUT_LEVEL 
+        pygame.time.set_timer(EVENT_ENEMY, SPAWN_TIME)
+        pygame.time.set_timer(EVENT_TIMEOUT, TIMEOUT_STEP)
         
     def update(self):
         for ent in self.entity_list:
@@ -57,10 +58,7 @@ class Level:
             
         if self.hud:
             self.hud.draw(self.window)
-            
-        if self.player_dead:
-            rect = self.lose_image.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
-            self.window.blit(self.lose_image, rect)    
+                
 
     def run(self):
         pygame.mixer_music.load(f'./assets/music/{self.name}.wav')
@@ -79,15 +77,33 @@ class Level:
                 if event.type == EVENT_ENEMY:
                     choice = random.choice(('Enemy1','Enemy2','Enemy3'))
                     self.entity_list.append(EntityFactory.get_entity(choice))
+                if event.type == EVENT_TIMEOUT:
+                    self.timeout -= TIMEOUT_STEP  
+                    if self.timeout == 0:
+                        rect = self.win_image.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
+                        self.window.blit(self.win_image, rect)
+                        pygame.display.flip()
+                        
+                        pygame.time.delay(3000)
+                        return True  
                 if event.type == pygame.KEYDOWN:
                     if (event.key == pygame.K_j) or (event.key == pygame.K_z): 
                         for ent in self.entity_list:
                             if isinstance(ent, Player):  
                                 ent.attack()    
                                 
+            if self.player_dead:
+                rect = self.lose_image.get_rect(center=(self.window.get_width() // 2, self.window.get_height() // 2))
+                self.window.blit(self.lose_image, rect)
+                pygame.display.flip()
+                
+                pygame.time.delay(3000)
+                return False  
+                                
             self.level_text(18,f'{self.name[:6]} - Timeout: {self.timeout / 1000 :.1f}s', COLOR_WHITE,(10,5))
-            self.level_text(18,f'fps: {clock.get_fps() :.0f}', COLOR_YELLOW,(10, WIN_HEIGHT - 35))
-            self.level_text(18,f'entidades: {len(self.entity_list)}', COLOR_YELLOW, (10, WIN_HEIGHT - 20))
+            #FPS
+            self.level_text(18,f'FPS: {clock.get_fps() :.0f}', COLOR_YELLOW,(10, WIN_HEIGHT - 20))
+            #score
             self.level_text(18,f'Score: {self.score}', COLOR_BLUE,(WIN_WIDTH - 110,5))
             pygame.display.flip()
         pass

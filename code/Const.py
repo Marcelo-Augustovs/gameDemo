@@ -9,6 +9,7 @@ COLOR_BLUE = (70, 130, 180)
 
 #E
 EVENT_ENEMY = pygame.USEREVENT + 1
+EVENT_TIMEOUT = pygame.USEREVENT + 2
 ENTITY_SPEED = {
     'menu_inicial0': 0,
     'menu_inicial1': 1.9,
@@ -38,6 +39,13 @@ MENU_OPTION = ('NEW GAME',
                'Credits',
                 'EXIT'
 )
+
+# S
+SPAWN_TIME = 3000
+
+# T
+TIMEOUT_STEP = 100
+TIMEOUT_LEVEL = 60000 * 1 # 1 min * 2 = 2 minutos
 
 # W
 WIN_WIDTH = 800
