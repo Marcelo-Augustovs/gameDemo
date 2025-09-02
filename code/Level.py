@@ -14,13 +14,13 @@ from code.Player import Player
 
 class Level:
     
-    def __init__(self, window, name, game_mode):
+    def __init__(self, window, name, game_mode,score=0):
         self.window = window
         self.name = name
         self.game_mode = game_mode
         self.entity_list: list[Entity] = [] 
         self.entity_list.extend(EntityFactory.get_entity(self.name))
-        self.score = 0
+        self.score = score
         
         self.hud = None
         if self.name != 'menu_inicial':
@@ -84,8 +84,8 @@ class Level:
                         self.window.blit(self.win_image, rect)
                         pygame.display.flip()
                         
-                        pygame.time.delay(3000)
-                        return True  
+                        pygame.time.delay(2000)
+                        return True, self.score  
                 if event.type == pygame.KEYDOWN:
                     if (event.key == pygame.K_j) or (event.key == pygame.K_z): 
                         for ent in self.entity_list:
@@ -97,7 +97,7 @@ class Level:
                 self.window.blit(self.lose_image, rect)
                 pygame.display.flip()
                 
-                pygame.time.delay(3000)
+                pygame.time.delay(2000)
                 return False  
                                 
             self.level_text(18,f'{self.name[:6]} - Timeout: {self.timeout / 1000 :.1f}s', COLOR_WHITE,(10,5))
